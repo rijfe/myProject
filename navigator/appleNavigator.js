@@ -9,6 +9,7 @@ import LoginScreen from "../screens/loginScreen";
 import MainScreen from "../screens/MainScreen";
 import SecondScreen from "../screens/secondScreen";
 import SettingScreen from "../screens/settingScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 
 import { screenOptions as LoginScreenOptions } from "../screens/loginScreen";
 import { screenOptions as MainScreenOptions } from "../screens/MainScreen";
@@ -50,6 +51,7 @@ const appNav = () =>{
             <Stack.Navigator>
                 <Stack.Screen name="LoginScreen" component = {LoginScreen} options={LoginScreenOptions}/>
                 <Stack.Screen name="tab" component={tabNav} options={MainScreenOptions}/>
+                <Stack.Screen name="SignUp" component={SignUpScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     ); 

@@ -34,7 +34,7 @@ const loginScreen = props =>{
                             <Button title="Login" onPress={()=>{props.navigation.navigate('tab')}}/>
                         </View>
                         <View style={styles.button}>
-                            <Button title="SiguUp"/>
+                            <Button title="SiguUp" onPress={()=>{props.navigation.navigate("SignUp")}}/>
                         </View>
                     </SafeAreaView>
                 </KeyboardAvoidingView>
