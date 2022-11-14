@@ -5,7 +5,7 @@ import {Picker} from "@react-native-picker/picker";
 import Input from "../component/Input";
 
 const SignUpScreen = () => {
-    const [selectRule, setSelectRule] = useState();
+    const [selectRole, setSelectRole] = useState();
     return(
         <View style={styles.center}>
             <KeyboardAvoidingView>
@@ -41,12 +41,14 @@ const SignUpScreen = () => {
                         initialValue=""
                     />
                     <Picker
-                        selectedValue={selectRule}
-                        onValueChange={(itemValue, itemIndex)=>{setSelectRule(itemValue)}}
+                        selectedValue={selectRole}
+                        onValueChange={(itemValue, itemIndex)=>{
+                            setSelectRole(itemValue)
+                        }}
                     >
-                        <Picker.Item label="학생" value="학생"/>
-                        <Picker.Item label="교직원" value="교직원"/>
-                        <Picker.Item label="교수" value="교수"/>
+                        <Picker.Item label="학생" value="Student"/>
+                        <Picker.Item label="교직원" value="Staff"/>
+                        <Picker.Item label="교수" value="Professor"/>
                     </Picker>
                     <Button title="SignUp"/>
                 </SafeAreaView>
