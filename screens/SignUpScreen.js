@@ -4,7 +4,7 @@ import {Picker} from "@react-native-picker/picker";
 
 import Input from "../component/Input";
 
-const SignUpScreen = () => {
+const SignUpScreen = props => {
     const [selectRole, setSelectRole] = useState("");
     const [userName, setUserName] = useState("");
     const [userStdId, setUserStdId] = useState("");
@@ -53,10 +53,17 @@ const SignUpScreen = () => {
             })
         }).then((reponse) => {
             console.log(reponse.json());
+            setSignupSuccess(true);
         }).catch((error)=>{
             console.log(error);
         });
     };
+
+    if(signupSuccess){
+        Alert.alert('회원가입에 성공했습니다.', '로그인하세요.' , [
+                {text:'Ok', style:'destructive', onPress:()=>{props.navigation.pop()}}
+        ]);
+    }
 
     return(
         <View style={styles.Input}>
