@@ -1,12 +1,41 @@
 import React,{useState, createRef} from "react";
-import { View, Button, StyleSheet, Text, TextInput, Image } from "react-native";
+import { View, Button, StyleSheet, Text, TextInput, Image, Alert } from "react-native";
 
 const loginScreen = props =>{
     const [userPwd, setUserPwd] = useState("");
     const [userStdId, setUserStdId] = useState("");
+    const [loginSuccess, setLoginSuccess] = useState(false);
 
     const pwdInputRef = createRef();
     const idInputRef = createRef();
+
+    const loginHandler = props =>{
+        if(!userStdId){
+            Alert.alert('학번을 입력해주세요.');
+            return;
+        }
+        if(!userPwd){
+            Alert.alert('비밀번호를 입력해주세요.');
+            return;
+        }
+        let loginUrl = 'http://119.203.225.3/user/login?';
+        let id = 'identifier='+userStdId;
+        let pwd = '&password='+userPwd;
+        let url = loginUrl+id+pwd;
+        fetch(url,{
+            method:'GET'
+        }).then((reponse)=>{
+            console.log(reponse.json());
+            setLoginSuccess(true);
+        }).then((error)=>{
+            console.log(error);
+        });
+    };
+
+    if(loginSuccess){
+        props.navigation.navigate('tab');
+        setLoginSuccess(false);
+    }
 
     return(
         <View style={styles.centered}>
@@ -38,7 +67,7 @@ const loginScreen = props =>{
                     />
                 </View>
                 <View style={styles.button}>
-                    <Button title="Login" onPress={()=>{props.navigation.navigate('tab')}}/>
+                    <Button title="Login" onPress={()=>{loginHandler();}}/>
                 </View>
                 <View>
                     <Button title="SignUp" onPress={()=>{props.navigation.navigate('SignUp')}}/>
