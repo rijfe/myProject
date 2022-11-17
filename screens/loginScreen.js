@@ -9,6 +9,11 @@ const loginScreen = props =>{
     const pwdInputRef = createRef();
     const idInputRef = createRef();
 
+    const clear = () =>{
+        idInputRef.current.clear();
+        pwdInputRef.current.clear();
+    };
+
     const loginHandler = props =>{
         if(!userStdId){
             Alert.alert('학번을 입력해주세요.');
@@ -25,8 +30,19 @@ const loginScreen = props =>{
         fetch(url,{
             method:'GET'
         }).then((reponse)=>{
-            console.log(reponse.json());
-            setLoginSuccess(true);
+            let resData = reponse.json();
+            resData.then((result)=>{
+                console.log(result.code);
+                if(result.code === "400"){
+                    Alert.alert(result.message,'다시 입력해주세요.',[
+                        {text:'Ok', style:'destructive', onPress:()=>{clear();}}
+                    ]);
+                }
+                else{
+                    console.log(result.accessToken);
+                    setLoginSuccess(true);
+                }
+            });
         }).then((error)=>{
             console.log(error);
         });
@@ -78,9 +94,9 @@ const loginScreen = props =>{
     );
 };
 
-export const screenOptions = navData =>{
+export const screenOptions = () =>{
     return{
-        headerTitle:'Login',
+        headerShown: false
     };
 };
 

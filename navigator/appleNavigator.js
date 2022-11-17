@@ -13,6 +13,8 @@ import SignUpScreen from "../screens/SignUpScreen";
 
 import { screenOptions as LoginScreenOptions } from "../screens/loginScreen";
 import { screenOptions as MainScreenOptions } from "../screens/MainScreen";
+import { screenOptions as SignUpScreenOptinons } from "../screens/SignUpScreen";
+
 
 const Stack = createStackNavigator();
 const Bottom = createBottomTabNavigator();

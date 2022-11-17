@@ -4,6 +4,8 @@ import {Picker} from "@react-native-picker/picker";
 
 import Input from "../component/Input";
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 const SignUpScreen = props => {
     const [selectRole, setSelectRole] = useState("");
     const [userName, setUserName] = useState("");
@@ -17,6 +19,14 @@ const SignUpScreen = props => {
     const pwdInputRef = createRef();
     const pwdchkInputRef = createRef();
     const nameInputRef = createRef();
+
+    const clear = () =>{
+        idInputRef.current.clear();
+        pwdInputRef.current.clear();
+        pwdchkInputRef.current.clear();
+        nameInputRef.current.clear();
+        setSelectRole('Nothing');
+    };
 
     const signUpHandler = () =>{
         if(!userName){
@@ -40,6 +50,8 @@ const SignUpScreen = props => {
             return;
         }
         
+        console.log(typeof(userName));
+
         fetch('http://119.203.225.3/user/user',{
             method:'POST',
             headers:{
@@ -52,8 +64,18 @@ const SignUpScreen = props => {
                 "userRole": selectRole
             })
         }).then((reponse) => {
-            console.log(reponse.json());
-            setSignupSuccess(true);
+            let resData = reponse.json();
+            resData.then((result)=>{
+                if(result.code === "400"){
+                    Alert.alert(result.message, '다시 입력해주세요.',[
+                        {text:'Ok', style:'destructive', onPress:()=>{clear();}}
+                    ]);
+                }
+                else{
+                    console.log(result.accessToken);
+                    setSignupSuccess(true);
+                }
+            });
         }).catch((error)=>{
             console.log(error);
         });
@@ -63,79 +85,88 @@ const SignUpScreen = props => {
         Alert.alert('회원가입에 성공했습니다.', '로그인하세요.' , [
                 {text:'Ok', style:'destructive', onPress:()=>{props.navigation.pop()}}
         ]);
+        setSignupSuccess(false);
     }
 
     return(
-        <View style={styles.Input}>
-            <View style={styles.formControl}>
-                <Text style={styles.label}>이름</Text>
-                <TextInput 
-                    style={styles.input} 
-                    onChangeText={(userName)=>{setUserName(userName)}}
-                    keyboardType='default'
-                    autoCapitalize='sentences'
-                    autoCorrect
-                    returnKeyType='next'
-                    ref={nameInputRef}
-                    onSubmitEditing={()=>
-                        idInputRef.current && idInputRef.current.focus()
-                    }
-                />
-            </View>
-            <View style={styles.formControl}>
-                <Text style={styles.label}>학번</Text>
-                <TextInput 
-                    style={styles.input} 
-                    onChangeText={(userStdId)=>{setUserStdId(userStdId)}}
-                    ref={idInputRef}
-                    returnKeyType="next"
-                    onSubmitEditing={()=>
-                        pwdInputRef.current && pwdInputRef.current.focus()
-                    }
-                />
-            </View>
-            <View>
-                <Text style={styles.label}>비밀번호</Text>
-                <TextInput 
-                    style={styles.input}
-                    onChangeText={(userPwd)=>{setUserPwd(userPwd)}}
-                    ref={pwdInputRef}
-                    onSubmitEditing={()=>
-                        pwdchkInputRef.current && pwdchkInputRef.current.focus()
-                    }
-                />
-            </View>
-            <View>
-                <Text style={styles.label}>비밀번호 확인</Text>
-                <TextInput 
-                    style={styles.input}
-                    onChangeText={(userPwdCheck)=>{setPwdCheck(userPwdCheck)}}
-                    ref={pwdchkInputRef}
-                    onSubmitEditing={()=>
-                        roleInputRef.current && roleInputRef.current.focus()
-                    }
-                />
-            </View>
-            <Text style={styles.label}>선택</Text>
-            <Picker
-                selectedValue={selectRole}
-                onValueChange={(itemValue, itemIndex)=>{
-                    setSelectRole(itemValue)
-                }}
-            >   
-                <Picker.Item label="선택해주세요." value="Nothing"/>
-                <Picker.Item label="학생" value="Student"/>
-                <Picker.Item label="교직원" value="Staff"/>
-                <Picker.Item label="교수" value="Professor"/>
-            </Picker>
-            <View style={styles.button}>
-                <Button title="Sign UP" onPress={()=>{signUpHandler();}}/>
+        <View style={styles.container}>
+                <View style={styles.Input}>
+                <View style={styles.formControl}>
+                    <Text style={styles.label}>이름</Text>
+                    <TextInput 
+                        style={styles.input} 
+                        onChangeText={(userName)=>{setUserName(userName);}}
+                        keyboardType='default'
+                        autoCapitalize='sentences'
+                        autoCorrect
+                        returnKeyType='next'
+                        ref={nameInputRef}
+                        onSubmitEditing={()=>
+                            idInputRef.current && idInputRef.current.focus()
+                        }
+                    />
+                </View>
+                <View style={styles.formControl}>
+                    <Text style={styles.label}>학번</Text>
+                    <TextInput 
+                        style={styles.input} 
+                        onChangeText={(userStdId)=>{setUserStdId(userStdId);}}
+                        ref={idInputRef}
+                        returnKeyType="next"
+                        onSubmitEditing={()=>
+                            pwdInputRef.current && pwdInputRef.current.focus()
+                        }
+                    />
+                </View>
+                <View>
+                    <Text style={styles.label}>비밀번호</Text>
+                    <TextInput 
+                        style={styles.input}
+                        onChangeText={(userPwd)=>{setUserPwd(userPwd);}}
+                        ref={pwdInputRef}
+                        onSubmitEditing={()=>
+                            pwdchkInputRef.current && pwdchkInputRef.current.focus()
+                        }
+                    />
+                </View>
+                <View>
+                    <Text style={styles.label}>비밀번호 확인</Text>
+                    <TextInput 
+                        style={styles.input}
+                        onChangeText={(userPwdCheck)=>{setPwdCheck(userPwdCheck);}}
+                        ref={pwdchkInputRef}
+                        onSubmitEditing={()=>
+                            roleInputRef.current && roleInputRef.current.focus()
+                        }
+                    />
+                </View>
+                <Text style={styles.label}>선택</Text>
+                <Picker
+                    selectedValue={selectRole}
+                    onValueChange={(itemValue, itemIndex)=>{
+                        setSelectRole(itemValue)
+                    }}
+                >   
+                    <Picker.Item label="선택해주세요." value="Nothing"/>
+                    <Picker.Item label="학생" value="ROLE_STUDENT"/>
+                    <Picker.Item label="교직원" value="Staff"/>
+                    <Picker.Item label="교수" value="Professor"/>
+                </Picker>
+                <View style={styles.button}>
+                    <Button title="Sign UP" onPress={()=>{signUpHandler();}}/>
+                </View>
             </View>
         </View>
+        
     );
 };
 
 const styles = StyleSheet.create({
+    container:{
+        flex:1,
+        justifyContent:'center',
+        alignContent:'center'
+    },
     Input:{
         justifyContent:'center',
         alignContent:'center',
@@ -173,5 +204,11 @@ const styles = StyleSheet.create({
         borderRadius:10,
     }
 });
+
+export const screenOptions = () =>{
+    return{
+        headerShown: false
+    };
+};
 
 export default SignUpScreen;
