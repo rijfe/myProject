@@ -4,8 +4,6 @@ import {Picker} from "@react-native-picker/picker";
 
 import Input from "../component/Input";
 
-import AsyncStorage from '@react-native-community/async-storage';
-
 const SignUpScreen = props => {
     const [selectRole, setSelectRole] = useState("");
     const [userName, setUserName] = useState("");

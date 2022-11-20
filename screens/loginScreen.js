@@ -1,5 +1,6 @@
 import React,{useState, createRef} from "react";
 import { View, Button, StyleSheet, Text, TextInput, Image, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const loginScreen = props =>{
     const [userPwd, setUserPwd] = useState("");
@@ -41,6 +42,7 @@ const loginScreen = props =>{
                 else{
                     console.log(result.accessToken);
                     setLoginSuccess(true);
+                    AsyncStorage.setItem(userStdId, result.accessToken)
                 }
             });
         }).then((error)=>{
@@ -49,7 +51,7 @@ const loginScreen = props =>{
     };
 
     if(loginSuccess){
-        props.navigation.navigate('tab');
+        props.navigation.navigate('tab', { STDID: userStdId });
         setLoginSuccess(false);
     }
 
