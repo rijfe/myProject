@@ -1,3 +1,3 @@
 # myProject
 
-cpaston project apple
+cpaston project app
