@@ -15,6 +15,8 @@ const loginScreen = props =>{
         pwdInputRef.current.clear();
     };
 
+    let para = ""+userStdId;
+
     const loginHandler = props =>{
         if(!userStdId){
             Alert.alert('학번을 입력해주세요.');
@@ -26,6 +28,7 @@ const loginScreen = props =>{
         }
         let loginUrl = 'http://119.203.225.3/user/login?';
         let id = 'identifier='+userStdId;
+        
         let pwd = '&password='+userPwd;
         let url = loginUrl+id+pwd;
         fetch(url,{
@@ -33,7 +36,6 @@ const loginScreen = props =>{
         }).then((reponse)=>{
             let resData = reponse.json();
             resData.then((result)=>{
-                console.log(result.code);
                 if(result.code === "400"){
                     Alert.alert(result.message,'다시 입력해주세요.',[
                         {text:'Ok', style:'destructive', onPress:()=>{clear();}}
@@ -41,8 +43,10 @@ const loginScreen = props =>{
                 }
                 else{
                     console.log(result.accessToken);
+                    console.log(""+userStdId);
                     setLoginSuccess(true);
-                    AsyncStorage.setItem(userStdId, result.accessToken)
+                    AsyncStorage.setItem('info', JSON.stringify({token: result, id: ""+userStdId}));
+                    clear();
                 }
             });
         }).then((error)=>{
@@ -51,7 +55,7 @@ const loginScreen = props =>{
     };
 
     if(loginSuccess){
-        props.navigation.navigate('tab', { STDID: userStdId });
+        props.navigation.navigate('tab',{screen:'Main', params:{id: ""+userStdId}});
         setLoginSuccess(false);
     }
 

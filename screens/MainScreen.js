@@ -8,11 +8,13 @@ import Colors from "../Constant/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MainScreen = props => {
-    const stId = route.params.STDID;
+    const id = props.route.params.id;
 
     const test = () =>{
-        const token = AsyncStorage.getItem(stId);
-        console.log(token);
+        const token = AsyncStorage.getItem('info');
+        token.then((result)=>{
+            console.log(result);
+        });
     };
 
     return(
@@ -24,7 +26,8 @@ const MainScreen = props => {
 };
 
 
-export const screenOptions = navData =>{
+export const screenOptions = props =>{
+    
     return{
         headerTitle:"Main",
         headerLeft:()=>{
@@ -32,7 +35,10 @@ export const screenOptions = navData =>{
         },
         headerRight:()=>(
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item title='logout' iconName={'ios-log-out'} onPress={()=>{navData.navigation.pop();}}/>
+                <Item title='logout' iconName={'ios-log-out'} onPress={()=>{
+                    props.navigation.pop();
+                    AsyncStorage.removeItem('info');
+                }}/>
             </HeaderButtons>
         )
     };
