@@ -8,7 +8,6 @@ import Colors from "../Constant/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MainScreen = props => {
-    const id = props.route.params.id;
 
     const test = () =>{
         const token = AsyncStorage.getItem('info');

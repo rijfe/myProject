@@ -1,11 +1,14 @@
-import React,{useState, createRef} from "react";
+import React,{useState, createRef, useEffect} from "react";
 import { View, Button, StyleSheet, Text, TextInput, Image, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import Loading from "../screens/Loading";
 
 const loginScreen = props =>{
     const [userPwd, setUserPwd] = useState("");
     const [userStdId, setUserStdId] = useState("");
     const [loginSuccess, setLoginSuccess] = useState(false);
+    const [ready, setReady] = useState(false);
 
     const pwdInputRef = createRef();
     const idInputRef = createRef();
@@ -16,6 +19,24 @@ const loginScreen = props =>{
     };
 
     let para = ""+userStdId;
+
+    useEffect(()=>{
+        props.navigation.addListener('beforeRemove', (e)=>{
+            e.preventDefault();
+        });
+
+        setTimeout(() => {
+            AsyncStorage.getItem('info', (err, result)=>{
+                console.log(result);
+                if(result){
+                    props.navigation.navigate('tab');
+                }else{
+                    setReady(true);
+                }
+            });
+            setReady(true);
+        }, 1000);
+    },[]);
 
     const loginHandler = props =>{
         if(!userStdId){
@@ -45,7 +66,7 @@ const loginScreen = props =>{
                     console.log(result.accessToken);
                     console.log(""+userStdId);
                     setLoginSuccess(true);
-                    AsyncStorage.setItem('info', JSON.stringify({token: result, id: ""+userStdId}));
+                    AsyncStorage.setItem('info', JSON.stringify({result}));
                     clear();
                 }
             });
@@ -59,7 +80,7 @@ const loginScreen = props =>{
         setLoginSuccess(false);
     }
 
-    return(
+    return ready ? (
         <View style={styles.centered}>
             <View style={styles.logo}>
                 <Image source={require('../assets/logo-removebg-preview.png')}/>
@@ -96,7 +117,8 @@ const loginScreen = props =>{
                 </View>
             </View>
         </View>
-        
+    ) : (
+        <Loading/>
     );
 };
 
