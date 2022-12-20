@@ -12,7 +12,8 @@ const MainScreen = props => {
     const test = () =>{
         const token = AsyncStorage.getItem('info');
         token.then((result)=>{
-            console.log(result);
+            const p = JSON.parse(result);
+            console.log(p.result.accessToken);
         });
     };
 
