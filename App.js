@@ -1,8 +1,6 @@
 import React from 'react';
 
-import AppNavivation from './navigator/appleNavigator';
-
-import LoginScreen from './screens/loginScreen';
+import AppNavivation from './navigator/appNavigator';
 
 export default function App() {
   return (

@@ -38,7 +38,7 @@ const loginScreen = props =>{
         }, 1000);
     },[]);
 
-    const loginHandler = props =>{
+    const loginHandler = async (props) =>{
         if(!userStdId){
             Alert.alert('학번을 입력해주세요.');
             return;
@@ -52,7 +52,7 @@ const loginScreen = props =>{
         
         let pwd = '&password='+userPwd;
         let url = loginUrl+id+pwd;
-        fetch(url,{
+        await fetch(url,{
             method:'GET'
         }).then((reponse)=>{
             let resData = reponse.json();

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Button } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -7,20 +7,45 @@ import Colors from "../Constant/Colors";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MainScreen = props => {
-
+const MainScreen = ({navigation}) => {
+    const [token, setToken] = useState("");
+    let str;
     const test = () =>{
-        const token = AsyncStorage.getItem('info');
-        token.then((result)=>{
+        const t = AsyncStorage.getItem('info');
+        t.then((result)=>{
             const p = JSON.parse(result);
             console.log(p.result.accessToken);
+            str = p.result.accessToken;
+            setToken(str);
         });
     };
+
+    const getData = () =>{
+        console.log(token)
+        fetch("http://119.203.225.3/user/user",{
+            method:'GET',
+            headers:{
+                'Authorization':token
+            }
+        }).then((reponse)=>{
+            let resData = reponse.json();
+            resData.then((result)=>{
+                console.log(result);
+                navigation.setParams({
+                    owner: result.owner
+                });
+            });
+        });
+    };
+
+    useEffect(()=>{
+        test();
+    },[])
 
     return(
         <View>
             <Text>wellcome Main!</Text>
-            <Button title="Click" onPress={()=>{test();}}/>
+            <Button title="Click" onPress={()=>{getData();}}/>
         </View>
     );
 };
@@ -29,7 +54,7 @@ const MainScreen = props => {
 export const screenOptions = props =>{
     
     return{
-        headerTitle:"Main",
+        headerTitle:"Coin",
         headerLeft:()=>{
 
         },

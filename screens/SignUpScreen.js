@@ -47,8 +47,6 @@ const SignUpScreen = props => {
             Alert.alert('선택해주세요.');
             return;
         }
-        
-        console.log(typeof(userName));
 
         fetch('http://119.203.225.3/user/user',{
             method:'POST',
@@ -74,8 +72,6 @@ const SignUpScreen = props => {
                     setSignupSuccess(true);
                 }
             });
-        }).catch((error)=>{
-            console.log(error);
         });
     };
 
