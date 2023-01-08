@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, Button, TouchableOpacity, StyleSheet } from "react-native";
+import { useRecoilValue } from "recoil";
 
-const SettingScreen = ({route}) => {
-    let [name, setName] = useState("");
+import { getName} from "../store/getUserInfo";
+import {getToken} from "../store/getUserToken";
 
-    useEffect(()=>{
-        let owner = route.params;
-        console.log(route);
-        setName(owner);
-    },[]);
+const SettingScreen = () => {
+    let userName = useRecoilValue(getName);
+    let userToken = useRecoilValue(getToken);
 
-    console.log(name);
+    const changePwd = () =>{
+        fetch("http://119.203.225.3/user/user?newPassword=21",{
+            method:'PATCH',
+            headers:{
+                'Authorization': userToken
+            }
+        }).then((response)=>{
+            let res = response.json();
+            console.log(res);
+            res.then((result)=>{
+                console.log(result);
+            })
+        });
+    };
 
     return(
         <View style={styles.centered}>
@@ -18,8 +30,9 @@ const SettingScreen = ({route}) => {
                 <Image style={styles.logo} source={require('../assets/free-icon-person-5393061.png')}/>
             </TouchableOpacity>
             <View style={styles.text}>
-                <Text style={styles.textsize}>김영우님 환영합니다!</Text>
+                <Text style={styles.textsize}>{userName}님 환영합니다!</Text>
             </View>
+            <Button title="change" onPress={()=>{changePwd();}}/>
         </View>
     );
 };
@@ -42,7 +55,7 @@ const styles = StyleSheet.create({
         width:"52%",
     },
     text:{
-        marginTop:10,
+        marginTop:30,
         justifyContent:'center',
         alignItems: 'center'
     },
