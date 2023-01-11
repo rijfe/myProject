@@ -4,13 +4,14 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useRecoilState } from "recoil";
 
 import HeaderButton from "../component/UI/HeaderButton";
+
 import Colors from "../Constant/Colors";
 import { nameState } from "../store/getUserInfo";
 import { tokenState } from "../store/getUserToken";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MainScreen = ({navigation}) => {
+const MainScreen = (props) => {
     const [token, setToken] = useRecoilState(tokenState);
     const [name, setName] = useRecoilState(nameState);
 

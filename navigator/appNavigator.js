@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoginScreen from "../screens/loginScreen";
 import MainScreen from "../screens/MainScreen";
 import SecondScreen from "../screens/secondScreen";
-import SettingScreen from "../screens/settingScreen";
+import UserInfoScreen from "../screens/UserInfo";
 import SignUpScreen from "../screens/SignUpScreen";
 
 import { screenOptions as LoginScreenOptions } from "../screens/loginScreen";
@@ -43,7 +43,7 @@ const tabNav = () => {
         >
             <Bottom.Screen name="Main" component={MainScreen} />
             <Bottom.Screen name="Second" component={SecondScreen}/>
-            <Bottom.Screen name="User" component={SettingScreen}/>
+            <Bottom.Screen name="User" component={UserInfoScreen}/>
         </Bottom.Navigator>
     );
     
