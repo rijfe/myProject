@@ -7,14 +7,22 @@ import  Ionicons from '@expo/vector-icons/Ionicons';
 import BottomSheet from "./InfoChangeScreen";
 
 import { getName } from "../store/getUserInfo";
+import { getTokenState } from "../store/setTokenstate";
 
-const UserInfoScreen = () => {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const UserInfoScreen = props => {
     let userName = useRecoilValue(getName);
+    const curToken = useRecoilValue(getTokenState);
 
     const [ modalVisible, setModalVisible ] = useState(false);
 
     const pressButton = () => {
         setModalVisible(true);
+    }
+
+    if(curToken === "change"){
+        props.navigation.pop();
     }
 
     return (

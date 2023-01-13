@@ -13,12 +13,16 @@ import {
     Alert
 } from 'react-native';
 
-import { useRecoilValue } from "recoil";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { useRecoilState,useRecoilValue } from "recoil";
 import { getToken } from "../store/getUserToken";
+import { curTokenState } from '../store/setTokenstate';
 
 const BottomSheet = props => {
     const [userPwd, setUserPwd] = useState("");
     const [userPwdCheck, setPwdCheck] = useState("");
+    const [curToken, setCurToken] = useRecoilState(curTokenState);
 
     const pwdInputRef = createRef();
     const pwdchkInputRef = createRef();
@@ -61,6 +65,12 @@ const BottomSheet = props => {
         }
     })).current;
 
+    const closeModal = () => {
+        closeBottomSheet.start(() => {
+            setModalVisible(false);
+        })
+    };
+
     const changePwd = props => {
         if(!userPwd){
             Alert.alert('비밀번호를 입력해주세요');
@@ -76,7 +86,7 @@ const BottomSheet = props => {
                 let res = response.json();
                 console.log(res);
                 res.then((result) => {
-                    console.log(result);
+                    setCurToken("change");
                 })
             });
         }
@@ -90,12 +100,6 @@ const BottomSheet = props => {
             resetBottomSheet.start();
         }
     }, [props.modalVisible]);
-
-    const closeModal = () => {
-        closeBottomSheet.start(() => {
-            setModalVisible(false);
-        })
-    }
 
     return (
         <Modal
