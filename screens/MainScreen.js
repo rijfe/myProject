@@ -8,12 +8,14 @@ import HeaderButton from "../component/UI/HeaderButton";
 import Colors from "../Constant/Colors";
 import { nameState } from "../store/getUserInfo";
 import { tokenState } from "../store/getUserToken";
+import { getIdState } from "../store/getId";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MainScreen = (props) => {
     const [token, setToken] = useRecoilState(tokenState);
     const [name, setName] = useRecoilState(nameState);
+    const [id, setId] = useRecoilState(getIdState);
 
     let str;
     const getInfo = () =>{
@@ -36,6 +38,7 @@ const MainScreen = (props) => {
             resData.then((result)=>{
                 console.log(result);
                 setName(result.owner);
+                setId(result.identifier);
             });
         });
         

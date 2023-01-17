@@ -27,7 +27,7 @@ const tabNav = () => {
             screenOptions={({route})=>({
                 tabBarIcon:({ focused, color, size })=>{
                     let iconName;
-
+                    color = "black";
                     if(route.name === 'Main'){
                         iconName = focused ? 'ios-home':'ios-home-outline';
                     }
@@ -40,6 +40,10 @@ const tabNav = () => {
                     return <Ionicons name={iconName} size={size} color={color} />;
                 }
             })}
+            tabBarOptions={{
+                activeTintColor: 'black',
+                inactiveTintColor: 'gray',
+            }}
         >
             <Bottom.Screen name="Main" component={MainScreen} />
             <Bottom.Screen name="Second" component={SecondScreen}/>
@@ -55,7 +59,7 @@ const appNav = () =>{
             <Stack.Navigator>
                 <Stack.Screen name="LoginScreen" component = {LoginScreen} options={LoginScreenOptions}/>
                 <Stack.Screen name="tab" component={tabNav} options={MainScreenOptions}/>
-                <Stack.Screen name="SignUp" component={SignUpScreen}/>
+                <Stack.Screen name="SignUp" component={SignUpScreen} options={SignUpScreenOptinons}/>
             </Stack.Navigator>
         </NavigationContainer>
     ); 

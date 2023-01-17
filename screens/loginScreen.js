@@ -4,11 +4,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Loading from "../screens/Loading";
 
+import { useRecoilState } from "recoil";
+
+import { curTokenState} from "../store/setTokenstate";
+
 const loginScreen = props =>{
     const [userPwd, setUserPwd] = useState("");
     const [userStdId, setUserStdId] = useState("");
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [ready, setReady] = useState(false);
+
+    const [tokenState, setTokenState]= useRecoilState(curTokenState);
 
     const pwdInputRef = createRef();
     const idInputRef = createRef();
@@ -73,6 +79,8 @@ const loginScreen = props =>{
         }).then((error)=>{
             console.log(error);
         });
+        setTokenState("login");
+        clear();
     };
 
     if(loginSuccess){
@@ -92,6 +100,7 @@ const loginScreen = props =>{
                         style={styles.input} 
                         onChangeText={(userStdId)=>{setUserStdId(userStdId)}}
                         ref={idInputRef}
+                        placeholder = "학번을 입력하세요."
                         returnKeyType="next"
                         onSubmitEditing={()=>
                             pwdInputRef.current && pwdInputRef.current.focus()
@@ -104,16 +113,17 @@ const loginScreen = props =>{
                         style={styles.input}
                         onChangeText={(userPwd)=>{setUserPwd(userPwd)}}
                         ref={pwdInputRef}
+                        placeholder = "비밀번호를 입력하세요."
                         onSubmitEditing={()=>
                             idInputRef.current && idInputRef.current.focus()
                         }
                     />
                 </View>
                 <View style={styles.button}>
-                    <Button title="Login" onPress={()=>{loginHandler();}}/>
+                    <Button title="Login" color="black" onPress={()=>{loginHandler();}}/>
                 </View>
                 <View>
-                    <Button title="SignUp" onPress={()=>{props.navigation.navigate('SignUp')}}/>
+                    <Button title="SignUp" color="black" onPress={()=>{props.navigation.navigate('SignUp'); clear();}}/>
                 </View>
             </View>
         </View>

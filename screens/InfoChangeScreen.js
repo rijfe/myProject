@@ -10,7 +10,8 @@ import {
     PanResponder,
     TextInput,
     Button,
-    Alert
+    Alert,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -86,9 +87,10 @@ const BottomSheet = props => {
                 let res = response.json();
                 console.log(res);
                 res.then((result) => {
-                    setCurToken("change");
+                    console.log(result);
                 })
             });
+            setCurToken("change");
         }
         else{
             Alert.alert('비밀번호가 일치하지 않습니다.');
@@ -108,7 +110,7 @@ const BottomSheet = props => {
             transparent
             statusBarTranslucent
         >
-            <View style={styles.overlay}>
+            <KeyboardAvoidingView behavior='padding' style={styles.overlay}>
                 <TouchableWithoutFeedback
                     onPress={closeModal}
                 >
@@ -123,24 +125,24 @@ const BottomSheet = props => {
                         <View style={styles.container}>
                             <TextInput
                                 style={styles.input}
-                                defaultValue="새로운 비밀번호"
+                                placeholder="새로운 비밀번호"
                                 onChangeText={(userPwd) => { setUserPwd(userPwd); }}
                                 ref={pwdInputRef}
                                 returnKeyType="next"
                             />
                             <TextInput
                                 style={styles.input}
-                                defaultValue="다시 입력해주세요."
+                                placeholder="비밀번호 확인"
                                 onChangeText={(userPwdCheck) => { setPwdCheck(userPwdCheck); }}
                                 ref={pwdInputRef}
                             />
                         </View>
                         <View style={styles.change}>
-                            <Button title='변경' onPress={()=>{changePwd();}} />
+                            <Button title='변경' color="black" onPress={()=>{changePwd();}} />
                         </View>
                     </View>
                 </Animated.View>
-            </View>
+            </KeyboardAvoidingView>
         </Modal>
     )
 }
@@ -161,6 +163,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
+        alignSelf:'stretch'
     },
     input: {
         paddingHorizontal: 2,

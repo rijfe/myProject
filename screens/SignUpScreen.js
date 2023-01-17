@@ -1,11 +1,11 @@
 import React,{useState, createRef} from "react";
-import { View, Button, StyleSheet, KeyboardAvoidingView, SafeAreaView, Text, TextInput, Alert } from "react-native";
+import { View, Button, StyleSheet, KeyboardAvoidingView, SafeAreaView, Text, TextInput, Alert, Image } from "react-native";
 import {Picker} from "@react-native-picker/picker";
 
 import Input from "../component/Input";
 
 const SignUpScreen = props => {
-    const [selectRole, setSelectRole] = useState("");
+    const [selectRole, setSelectRole] = useState("ROLE_STUDENT");
     const [userName, setUserName] = useState("");
     const [userStdId, setUserStdId] = useState("");
     const [userPwd, setUserPwd] = useState("");
@@ -23,7 +23,6 @@ const SignUpScreen = props => {
         pwdInputRef.current.clear();
         pwdchkInputRef.current.clear();
         nameInputRef.current.clear();
-        setSelectRole('Nothing');
     };
 
     const signUpHandler = () =>{
@@ -84,7 +83,10 @@ const SignUpScreen = props => {
 
     return(
         <View style={styles.container}>
-                <View style={styles.Input}>
+            <View style={styles.logo}>
+                <Image source={require('../assets/logo-removebg-preview.png')}/>
+            </View>
+            <View style={styles.Input}>
                 <View style={styles.formControl}>
                     <Text style={styles.label}>이름</Text>
                     <TextInput 
@@ -94,6 +96,7 @@ const SignUpScreen = props => {
                         autoCapitalize='sentences'
                         autoCorrect
                         returnKeyType='next'
+                        placeholder = "이름을 입력하세요."
                         ref={nameInputRef}
                         onSubmitEditing={()=>
                             idInputRef.current && idInputRef.current.focus()
@@ -106,6 +109,7 @@ const SignUpScreen = props => {
                         style={styles.input} 
                         onChangeText={(userStdId)=>{setUserStdId(userStdId);}}
                         ref={idInputRef}
+                        placeholder = "학번을 입력하세요."
                         returnKeyType="next"
                         onSubmitEditing={()=>
                             pwdInputRef.current && pwdInputRef.current.focus()
@@ -118,6 +122,7 @@ const SignUpScreen = props => {
                         style={styles.input}
                         onChangeText={(userPwd)=>{setUserPwd(userPwd);}}
                         ref={pwdInputRef}
+                        placeholder = "비밀번호를 입력하세요."
                         onSubmitEditing={()=>
                             pwdchkInputRef.current && pwdchkInputRef.current.focus()
                         }
@@ -129,25 +134,14 @@ const SignUpScreen = props => {
                         style={styles.input}
                         onChangeText={(userPwdCheck)=>{setPwdCheck(userPwdCheck);}}
                         ref={pwdchkInputRef}
+                        placeholder = "비밀번호를 다시 입력하세요."
                         onSubmitEditing={()=>
                             roleInputRef.current && roleInputRef.current.focus()
                         }
                     />
                 </View>
-                <Text style={styles.label}>선택</Text>
-                <Picker
-                    selectedValue={selectRole}
-                    onValueChange={(itemValue, itemIndex)=>{
-                        setSelectRole(itemValue)
-                    }}
-                >   
-                    <Picker.Item label="선택해주세요." value="Nothing"/>
-                    <Picker.Item label="학생" value="ROLE_STUDENT"/>
-                    <Picker.Item label="교직원" value="Staff"/>
-                    <Picker.Item label="교수" value="Professor"/>
-                </Picker>
                 <View style={styles.button}>
-                    <Button title="Sign UP" onPress={()=>{signUpHandler();}}/>
+                    <Button title="Sign UP" color="black" onPress={()=>{signUpHandler();}}/>
                 </View>
             </View>
         </View>
@@ -171,8 +165,9 @@ const styles = StyleSheet.create({
         elevation:5,
         borderRadius:10,
         backgroundColor:'white',
-        height:400,
-        margin:20
+        height:330,
+        margin:20,
+        marginTop: 40
     },
     form:{
         margin:20
@@ -196,12 +191,17 @@ const styles = StyleSheet.create({
         shadowRadius:8,
         elevation:5,
         borderRadius:10,
+    },
+    logo:{
+        flex:0.5,
+        justifyContent:'center',
+        alignItems:'center',
     }
 });
 
 export const screenOptions = () =>{
     return{
-        headerShown: false
+        headerTitle:"회원가입"
     };
 };
 
