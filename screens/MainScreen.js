@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, SafeAreaView, FlatList, StyleSheet } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useRecoilState } from "recoil";
 
 import HeaderButton from "../component/UI/HeaderButton";
+
+import MoveScreen from "./MoveScreen";
+import CoinList from "../component/UI/CoinList";
 
 import Colors from "../Constant/Colors";
 import { nameState } from "../store/getUserInfo";
@@ -16,6 +19,8 @@ const MainScreen = (props) => {
     const [token, setToken] = useRecoilState(tokenState);
     const [name, setName] = useRecoilState(nameState);
     const [id, setId] = useRecoilState(getIdState);
+    const [loading, setLoading] = useState(false);
+    const [coin, setCoin] = useState({});
 
     let str;
     const getInfo = () =>{
@@ -27,6 +32,17 @@ const MainScreen = (props) => {
         });
     };
 
+    const data = [
+        {
+            value:'0',
+            title: 'HBC',
+        },
+        {
+          value:'0',
+          title: 'TEST',
+        }
+      ];
+
     const getData = async() =>{
         await fetch("http://119.203.225.3/user/user",{
             method:'GET',
@@ -36,9 +52,10 @@ const MainScreen = (props) => {
         }).then((reponse)=>{
             let resData = reponse.json();
             resData.then((result)=>{
-                console.log(result);
+                setCoin(result.coin);
                 setName(result.owner);
                 setId(result.identifier);
+                setLoading(true);
             });
         });
         
@@ -46,16 +63,29 @@ const MainScreen = (props) => {
 
     useEffect(()=>{
         getInfo();
+
+        setTimeout(() => {
+            getData();
+        }, 1000);
     },[])
 
-    if(token != ""){
-        getData();
-    }
+    console.log(data);
 
-    return(
-        <View>
-            <Text>wellcome Main!</Text>
-        </View>
+    return loading ? (
+        <SafeAreaView  style={styles.container}>
+            <FlatList
+                data={data}
+                renderItem={({item})=>
+                    <CoinList
+                        title={item.title}
+                        value={item.value}
+                    />
+                }
+                keyExtractor={item => item.title}
+            />
+        </SafeAreaView>
+    ) : (
+        <MoveScreen/>
     );
 };
 
@@ -77,5 +107,11 @@ export const screenOptions = props =>{
         )
     };
 };
+
+const styles = StyleSheet.create({
+    container:{
+        flex:1
+    }
+});
 
 export default MainScreen;

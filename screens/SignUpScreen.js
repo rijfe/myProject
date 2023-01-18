@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         paddingHorizontal:2,
         paddingVertical:5,
         borderBottomColor:'#ccc',
-        borderBottomWidth:1
+        borderBottomWidth:1,
     },
     button:{
         shadowColor: 'black',

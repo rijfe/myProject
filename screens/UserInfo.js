@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, Button, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import React, { useEffect, useId, useState } from "react";
+import { View, Text, Image, Button, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView } from "react-native";
 import { useRecoilValue } from "recoil";
 import ActionButton from "react-native-action-button";
 import Ionicons from '@expo/vector-icons/Ionicons';
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import MoveScreen from "./MoveScreen";
 
 import BottomSheet from "./InfoChangeScreen";
 
@@ -15,25 +19,36 @@ const UserInfoScreen = props => {
     const curToken = useRecoilValue(getTokenState);
     let userId = useRecoilValue(setIdState);
 
-    const theme = {
-        Button: {
-          titleStyle: {
-            color: 'red',
-          },
-        },
-      };
-
     const [modalVisible, setModalVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [editable, setEditable] = useState(false);
+    const [department, setDepartment] = useState("");
+
+    useEffect(()=>{
+        const d = AsyncStorage.getItem('department');
+        d.then((dep)=>{
+            console.log(dep);
+            setDepartment(dep);
+        });
+        setTimeout(() => {
+            setLoading(true);
+        }, 1000);
+    },[])
 
     const pressButton = () => {
         setModalVisible(true);
     }
 
+    const saveHandler = () =>{
+        AsyncStorage.setItem('department', department);
+        setEditable(false);
+    };
+
     if (curToken === "change") {
         props.navigation.pop();
     }
 
-    return (
+    return loading ? (
         <View style={styles.centered}>
             <View style={styles.size}>
                 <TouchableOpacity>
@@ -42,21 +57,39 @@ const UserInfoScreen = props => {
             </View>
             <View style={styles.editContainer}>
                 <View style={styles.text}>
-                    <Text style={styles.textsize}>{userName}/{userId}</Text>
+                    <Text style={styles.textsize}>보유코인 : ?</Text>
                 </View>
                 <View style={styles.editBntContainer}>
                     <View >
-                        <Button title="프로필 편집하기" color="black" onPress={() => {}} />
+                        <Button title="프로필 편집하기" color="black" onPress={() => {setEditable(true);}} />
                     </View>
                     <View style={{ marginLeft: 10 }}>
-                        <Button title="저장" color="black" />
+                        <Button title="저장" color="black" onPress={()=>{saveHandler();}}/>
                     </View>
                 </View>
             </View>
-            <View style={styles.userPro}>
-                <Text style={{fontWeight:'bold', fontSize: 30}}>학과: 컴퓨터공학과</Text>
-                <TextInput/>
-            </View>
+            <KeyboardAvoidingView behavior='padding' style={styles.userPro}>
+                <Text style={{fontWeight:'bold', fontSize: 15, color:'grey'}}>이름</Text>
+                <TextInput
+                    defaultValue={userName}
+                    style={styles.input}
+                    editable={false}
+                    selectTextOnFocus={true}
+                />
+                <Text style={{fontWeight:'bold', fontSize: 15, color:'grey'}}>학번</Text>
+                <TextInput
+                    defaultValue={userId}
+                    style={styles.input}
+                    editable={false}
+                />
+                <Text style={{fontWeight:'bold', fontSize: 15, color:'grey'}}>학과 </Text>
+                <TextInput
+                    defaultValue={department}
+                    style={styles.input}
+                    editable= {editable ? true : false}
+                    onChangeText={(department)=>{setDepartment(department);}}
+                />
+            </KeyboardAvoidingView>
             <View style={styles.floating}>
                 <ActionButton
                     buttonColor="black"
@@ -71,6 +104,8 @@ const UserInfoScreen = props => {
                 setModalVisible={setModalVisible}
             />
         </View>
+    ):(
+        <MoveScreen/>
     );
 };
 
@@ -94,7 +129,7 @@ const styles = StyleSheet.create({
         marginRight: 25,
         justifyContent: 'space-around',
         alignItems: 'center',
-        right: 24
+        right: 35
     },
     textsize: {
         fontSize: 20,
@@ -121,12 +156,23 @@ const styles = StyleSheet.create({
     userPro:{
         position:'absolute',
         flexDirection:'column',
-        top: 200,
-        
+        top: 220,
+        left:30,
         height: 200,
+        width:"90%",
         justifyContent:'center',
         alignContent:'center',
-    }
+    },
+    input:{
+        width:"90%",
+        paddingHorizontal:2,
+        paddingVertical:7,
+        borderBottomColor:'black',
+        borderBottomWidth:1,
+        fontSize: 20,
+        marginBottom:15,
+        color:'black'
+    },
 });
 
 export default UserInfoScreen;
