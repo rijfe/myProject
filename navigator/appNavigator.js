@@ -38,7 +38,8 @@ const tabNav = () => {
                         iconName = focused ? 'ios-list' : 'ios-list-outline';
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
-                }
+                },
+                tabBarLabel:()=>{return null;}
             })}
             tabBarOptions={{
                 activeTintColor: 'black',

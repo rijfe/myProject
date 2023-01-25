@@ -87,8 +87,8 @@ const SignUpScreen = props => {
                 <Image source={require('../assets/logo-removebg-preview.png')}/>
             </View>
             <View style={styles.Input}>
+                <Text style={styles.coin}>Coin</Text>
                 <View style={styles.formControl}>
-                    <Text style={styles.label}>이름</Text>
                     <TextInput 
                         style={styles.input} 
                         onChangeText={(userName)=>{setUserName(userName);}}
@@ -104,7 +104,6 @@ const SignUpScreen = props => {
                     />
                 </View>
                 <View style={styles.formControl}>
-                    <Text style={styles.label}>학번</Text>
                     <TextInput 
                         style={styles.input} 
                         onChangeText={(userStdId)=>{setUserStdId(userStdId);}}
@@ -117,7 +116,6 @@ const SignUpScreen = props => {
                     />
                 </View>
                 <View>
-                    <Text style={styles.label}>비밀번호</Text>
                     <TextInput 
                         style={styles.input}
                         onChangeText={(userPwd)=>{setUserPwd(userPwd);}}
@@ -129,7 +127,6 @@ const SignUpScreen = props => {
                     />
                 </View>
                 <View>
-                    <Text style={styles.label}>비밀번호 확인</Text>
                     <TextInput 
                         style={styles.input}
                         onChangeText={(userPwdCheck)=>{setPwdCheck(userPwdCheck);}}
@@ -141,7 +138,7 @@ const SignUpScreen = props => {
                     />
                 </View>
                 <View style={styles.button}>
-                    <Button title="Sign UP" color="black" onPress={()=>{signUpHandler();}}/>
+                    <Button title="가입" color="black" onPress={()=>{signUpHandler();}}/>
                 </View>
             </View>
         </View>
@@ -167,7 +164,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         height:330,
         margin:20,
-        marginTop: 40
+        marginTop: 40,
     },
     form:{
         margin:20
@@ -183,6 +180,14 @@ const styles = StyleSheet.create({
         paddingVertical:5,
         borderBottomColor:'#ccc',
         borderBottomWidth:1,
+        borderRadius: 2,
+        borderColor: '#ccc',
+        backgroundColor: 'white',
+        borderWidth: 1,
+        marginBottom: 10,
+        backgroundColor:'#efefef',
+        width:'80%',
+        left: 37
     },
     button:{
         shadowColor: 'black',
@@ -191,11 +196,21 @@ const styles = StyleSheet.create({
         shadowRadius:8,
         elevation:5,
         borderRadius:10,
+        width:'80%',
+        left: 37
     },
     logo:{
         flex:0.5,
         justifyContent:'center',
         alignItems:'center',
+    },
+    coin: {
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        fontSize: 50, 
+        left: 130,
+        top:0,
+        marginBottom:10
     }
 });
 

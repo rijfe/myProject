@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useState } from "react";
 import { View, Text, Image, Button, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView } from "react-native";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import ActionButton from "react-native-action-button";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -10,9 +10,9 @@ import MoveScreen from "./MoveScreen";
 
 import BottomSheet from "./InfoChangeScreen";
 
-import { getName } from "../store/getUserInfo";
+import { getName,nameState } from "../store/getUserInfo";
 import { getTokenState } from "../store/setTokenstate";
-import { setIdState } from "../store/getId";
+import { setIdState,getIdState } from "../store/getId";
 
 const UserInfoScreen = props => {
     let userName = useRecoilValue(getName);
@@ -25,9 +25,9 @@ const UserInfoScreen = props => {
     const [department, setDepartment] = useState("");
 
     useEffect(()=>{
-        const d = AsyncStorage.getItem('department');
+        const d = AsyncStorage.getItem(""+curToken);
         d.then((dep)=>{
-            console.log(dep);
+            console.log(dep+"info");
             setDepartment(dep);
         });
         setTimeout(() => {
@@ -40,12 +40,14 @@ const UserInfoScreen = props => {
     }
 
     const saveHandler = () =>{
-        AsyncStorage.setItem('department', department);
+        AsyncStorage.setItem(""+curToken, department);
         setEditable(false);
     };
 
     if (curToken === "change") {
         props.navigation.pop();
+        AsyncStorage.removeItem('info');
+        AsyncStorage.removeItem(""+curToken);
     }
 
     return loading ? (

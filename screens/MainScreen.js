@@ -23,59 +23,70 @@ const MainScreen = (props) => {
     const [coin, setCoin] = useState({});
 
     let str;
-    const getInfo = () =>{
+    const getInfo = () => {
         const t = AsyncStorage.getItem('info');
-        t.then((result)=>{
+        t.then((result) => {
             const p = JSON.parse(result);
+            console.log(result);
             str = p.result.accessToken;
             setToken(str);
+            console.log(str);
+            console.log(p.userStdId);
+            setId(p.userStdId);
         });
     };
 
-    const data = [
+    let data = [
         {
-            value:'0',
-            title: 'HBC',
+            title:"HBC",
+            value: 0
         },
         {
-          value:'0',
-          title: 'TEST',
+            title:"TEST",
+            value: 0
         }
-      ];
+    ];
 
-    const getData = async() =>{
-        await fetch("http://119.203.225.3/user/user",{
-            method:'GET',
-            headers:{
-                'Authorization':token
+    const getData = async () => {
+        await fetch("http://119.203.225.3/user/user", {
+            method: 'GET',
+            headers: {
+                'Authorization': token
             }
-        }).then((reponse)=>{
+        }).then((reponse) => {
             let resData = reponse.json();
-            resData.then((result)=>{
+            resData.then((result) => {
                 setCoin(result.coin);
                 setName(result.owner);
-                setId(result.identifier);
-                setLoading(true);
+                console.log(result.coin)
             });
         });
-        
     };
 
-    useEffect(()=>{
+    const coinHandler = () => {
+        let { HBC, TEST } = coin;
+        data.push({ title: "HBC", value: HBC });
+        console.log(data.length);
+        data.push({ title: "TEST", value: TEST });
+        console.log(data.length);
+        setLoading(true);
+    };
+
+    useEffect(() => {
         getInfo();
 
+        getData();
+
         setTimeout(() => {
-            getData();
-        }, 1000);
-    },[])
+            coinHandler();
+        }, 2000);
+    }, [])
 
-    console.log(data);
-
-    return loading ? (
-        <SafeAreaView  style={styles.container}>
+    return (loading ? (
+        <SafeAreaView style={styles.container}>
             <FlatList
                 data={data}
-                renderItem={({item})=>
+                renderItem={({ item }) =>
                     <CoinList
                         title={item.title}
                         value={item.value}
@@ -83,34 +94,35 @@ const MainScreen = (props) => {
                 }
                 keyExtractor={item => item.title}
             />
+            <Text>{data.length}</Text>
         </SafeAreaView>
     ) : (
-        <MoveScreen/>
-    );
+        <MoveScreen />
+    ));
 };
 
 
-export const screenOptions = props =>{
-    
-    return{
-        headerTitle:"Coin",
-        headerLeft:()=>{
+export const screenOptions = props => {
+
+    return {
+        headerTitle: "Coin",
+        headerLeft: () => {
 
         },
-        headerRight:()=>(
+        headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item title='logout' iconName={'ios-log-out'} onPress={()=>{
+                <Item title='logout' iconName={'ios-log-out'} onPress={() => {
                     props.navigation.pop();
                     AsyncStorage.removeItem('info');
-                }}/>
+                }} />
             </HeaderButtons>
-        )
+        ),
     };
 };
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1
+    container: {
+        flex: 1
     }
 });
 

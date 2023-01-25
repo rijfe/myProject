@@ -16,17 +16,22 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { useRecoilState,useRecoilValue } from "recoil";
+import { useRecoilState,useRecoilValue, useResetRecoilState } from "recoil";
 import { getToken } from "../store/getUserToken";
 import { curTokenState } from '../store/setTokenstate';
+
+import { nameState } from '../store/getUserInfo';
 
 const BottomSheet = props => {
     const [userPwd, setUserPwd] = useState("");
     const [userPwdCheck, setPwdCheck] = useState("");
     const [curToken, setCurToken] = useRecoilState(curTokenState);
 
+    const nameReset = useResetRecoilState(nameState);
+
     const pwdInputRef = createRef();
     const pwdchkInputRef = createRef();
+    const btnRef = createRef();
 
     let userToken = useRecoilValue(getToken);
 
@@ -129,16 +134,22 @@ const BottomSheet = props => {
                                 onChangeText={(userPwd) => { setUserPwd(userPwd); }}
                                 ref={pwdInputRef}
                                 returnKeyType="next"
+                                onSubmitEditing={()=>{
+                                    pwdchkInputRef.current && pwdchkInputRef.current.focus()
+                                }}
                             />
                             <TextInput
                                 style={styles.input}
                                 placeholder="비밀번호 확인"
                                 onChangeText={(userPwdCheck) => { setPwdCheck(userPwdCheck); }}
-                                ref={pwdInputRef}
+                                ref={pwdchkInputRef}
+                                onSubmitEditing={()=>{
+                                    btnRef.current
+                                }}
                             />
                         </View>
                         <View style={styles.change}>
-                            <Button title='변경' color="black" onPress={()=>{changePwd();}} />
+                            <Button title='변경' color="black" ref={btnRef} onPress={()=>{changePwd(); nameReset(); AsyncStorage.removeItem('info');}} />
                         </View>
                     </View>
                 </Animated.View>
